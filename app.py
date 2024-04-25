@@ -15,19 +15,6 @@ app = Flask("prediction")
 # Load the dataset
 matches = pd.read_csv("data.csv")
 
-# Sample date conversion function for the specific format "YYYY年MM月DD日"
-def convert_date(date_str):
-    if '年' in date_str and '月' in date_str and '日' in date_str:
-        parts = date_str.split('年')
-        year = parts[0]
-        month_day = parts[1].split('月')
-        month = month_day[0]
-        day = month_day[1].rstrip('日')
-        return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
-    else:
-        return date_str
-
-matches["date"] = matches["date"].apply(convert_date)
 matches["date"] = pd.to_datetime(matches["date"], errors='coerce')
 
 # Convert 'result' to categorical class (W: 0, L: 1, D: 2)
