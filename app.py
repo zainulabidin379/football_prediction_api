@@ -13,7 +13,8 @@ from tensorflow.keras.utils import to_categorical
 app = Flask("prediction")
 
 # Load the dataset
-matches = pd.read_csv("data.csv")
+matches = pd.read_csv("training_data.csv")
+prediction_data = pd.read_csv("prediction.csv")
 
 matches["date"] = pd.to_datetime(matches["date"], errors='coerce')
 
@@ -103,7 +104,7 @@ def predict():
     if not team:
         return jsonify({"error": "Team name is required"}), 400
 
-    prediction_result = make_predictions_nn(matches, team, predictors, imputer, scaler, model)
+    prediction_result = make_predictions_nn(prediction_data, team, predictors, imputer, scaler, model)
     if prediction_result is None:
         return jsonify({"error": "Team not found"}), 404
 
