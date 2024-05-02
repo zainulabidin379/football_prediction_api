@@ -65,6 +65,15 @@ model.fit(
 
 def make_predictions_nn(data, team, predictors, imputer, scaler, model):
     team_matches = data[data["team"] == team]
+    team_matches["date"] = pd.to_datetime(team_matches["date"], errors='coerce')
+
+	# Convert 'result' to categorical class (W: 0, L: 1, D: 2)
+    team_matches["target"] = team_matches["result"].map({'W': 0, 'L': 1, 'D': 2}).astype("int")
+    team_matches["venue_code"] = team_matches["venue"].astype("category").cat.codes
+    team_matches["opp_code"] = team_matches["opponent"].astype("category").cat.codes
+    team_matches["hour"] = team_matches["time"].str.replace(":.+", "", regex=True).astype("int")
+    team_matches["day_code"] = team_matches["date"].dt.dayofweek
+
     if team_matches.empty:
         return None  # Indicates no data for the team
     
